@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Convite de Casamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FAF6EC;
+    --cream:#FBF3E6;
+    --wine:#C2185B;       /* fúcsia */
+    --wine-deep:#7A0F3B;  /* fúcsia escuro */
+    --orange:#E8793C;     /* laranja */
+    --gold:#B08D57;
+    --gold-soft:#D9C8A6;
+    --ink:#2B2320;
+    --sage:#E8793C;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Poppins', sans-serif;
+    background:var(--ivory);
+    color:var(--ink);
+    overflow-x:hidden;
+    font-weight:300;
+  }
+  h1,h2,h3, .display{ font-family:'Cormorant Garamond', serif; }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+
+  /* ============ CAPA / ENVELOPE ============ */
+  #envelope-screen{
+    position:fixed; inset:0; z-index:100;
+    background:
+      radial-gradient(circle at 15% 12%, rgba(255,255,255,0.10), transparent 45%),
+      radial-gradient(circle at 88% 85%, rgba(232,121,60,0.25), transparent 45%),
+      linear-gradient(160deg, var(--wine) 0%, var(--wine-deep) 100%);
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity 0.9s ease, visibility 0.9s ease;
+    overflow:hidden;
+  }
+  #envelope-screen.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+  .confetti{ position:absolute; border-radius:50%; opacity:0.7; }
+  .envelope{
+    position:relative; width:min(82vw, 340px);
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    transition:opacity 0.5s ease, transform 0.5s ease;
+  }
+  .envelope.opening{ opacity:0; transform:scale(0.96); }
+  .cover-kicker{ letter-spacing:4px; font-size:0.72rem; text-transform:uppercase; color:var(--gold-soft); margin-bottom:1.6rem; }
+  .cover-names{ font-size:clamp(3.2rem, 15vw, 5rem); font-weight:500; color:var(--ivory); line-height:1; }
+  .cover-names .amp{ color:var(--gold-soft); font-style:italic; }
+  .divider{ width:46px; height:1px; background:var(--gold); margin:1.4rem auto; }
+  .cover-date{ letter-spacing:3px; font-size:0.85rem; text-transform:uppercase; color:var(--gold-soft); margin-bottom:2.6rem; }
+  .seal{
+    width:56px; height:56px; border-radius:50%; border:1.5px solid var(--gold-soft);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; background:rgba(255,255,255,0.06);
+    transition:transform 0.3s ease, background 0.3s ease; margin:0 auto;
+  }
+  .seal:hover{ transform:scale(1.08); background:rgba(255,255,255,0.14); }
+  .seal svg{ width:24px; height:24px; }
+  .envelope-caption{
+    margin-top:1rem; color:var(--gold-soft); font-family:'Poppins', sans-serif;
+    letter-spacing:3px; font-size:0.75rem; text-transform:uppercase;
+  }
+
+  /* ============ SITE PRINCIPAL ============ */
+  #site{ display:none; }
+  #site.visible{ display:block; animation:fadeIn 1.2s ease; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  section{ padding:5.5rem 1.5rem; text-align:center; }
+
+  /* HERO */
+  #hero{
+    background:var(--cream); color:var(--ink); min-height:auto;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+    gap:0.4rem; padding-top:4.5rem;
+  }
+  .kicker{ letter-spacing:4px; font-size:0.72rem; text-transform:uppercase; color:var(--gold); }
+  .names{ font-size:clamp(2.6rem, 10vw, 4.2rem); font-weight:500; line-height:1.15; color:var(--ink); }
+  .amp{ color:var(--gold); font-style:italic; display:block; font-size:0.7em; margin:0.1em 0; }
+  .date-line{ margin-top:0.6rem; font-size:1.2rem; letter-spacing:0.5px; font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--wine); }
+  .invite-text{ max-width:480px; margin:1.6rem auto 2.2rem; color:#5a4f47; line-height:1.7; font-size:1.05rem; }
+  .hero-photo-wrap{ width:100%; max-width:480px; border-radius:14px; overflow:hidden; box-shadow:0 20px 40px rgba(43,35,32,0.18); }
+  .hero-photo-wrap img{ width:100%; aspect-ratio:4/5; object-fit:cover; }
+
+  /* VERSE */
+  #verse{ background:var(--wine); color:var(--ivory); }
+  #verse blockquote{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:clamp(1.3rem, 4vw, 1.8rem); max-width:640px; margin:0 auto; line-height:1.5; }
+  #verse cite{ display:block; margin-top:1.2rem; font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; color:var(--gold-soft); font-style:normal; }
+
+  /* LOCAL */
+  #local{ background:var(--ivory); }
+  #local .place-photo{ width:min(90%, 480px); margin:0 auto 1.8rem; border-radius:6px; overflow:hidden; box-shadow:0 20px 40px rgba(43,35,32,0.18); }
+  #local .place-photo img{ aspect-ratio:4/3; object-fit:cover; }
+  #local address{ font-style:normal; line-height:1.6; color:#5a4f47; margin-bottom:1.4rem; }
+  .btn{
+    display:inline-block; padding:0.85rem 2rem; border-radius:999px;
+    font-family:'Poppins', sans-serif; letter-spacing:1px; font-size:0.95rem;
+    border:1px solid var(--wine); color:var(--wine); transition:all 0.25s ease;
+  }
+  .btn:hover{ background:var(--wine); color:var(--ivory); }
+
+  /* CONTAGEM REGRESSIVA */
+  #countdown{ background:linear-gradient(180deg, var(--gold-soft), var(--cream)); }
+  #countdown .eyebrow{ letter-spacing:4px; font-size:0.72rem; text-transform:uppercase; color:var(--wine); margin-bottom:0.4rem; }
+  #countdown h2{ font-size:clamp(1.8rem,5vw,2.4rem); margin-bottom:2rem; color:var(--ink); }
+  .countdown-grid{ display:flex; justify-content:center; gap:1.6rem; flex-wrap:wrap; margin-bottom:0.4rem; }
+  .countdown-item{ min-width:64px; }
+  .countdown-num{ font-family:'Cormorant Garamond', serif; font-size:2.6rem; font-weight:600; color:var(--wine-deep); line-height:1; }
+  .countdown-label{ font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:#8a7a6d; margin-top:0.4rem; }
+
+  /* DRESS CODE */
+  #dresscode{ background:var(--wine-deep); color:var(--ivory); }
+  #dresscode .eyebrow{ letter-spacing:4px; font-size:0.72rem; text-transform:uppercase; color:var(--gold-soft); margin-bottom:0.4rem; }
+  #dresscode h2{ font-size:clamp(1.8rem,5vw,2.4rem); margin-bottom:0.8rem; }
+  #dresscode .intro{ max-width:420px; margin:0 auto 2.6rem; opacity:0.9; font-size:0.95rem; }
+  .dresscode-cols{ display:flex; justify-content:center; gap:2.4rem; flex-wrap:wrap; margin-bottom:2.4rem; }
+  .dresscode-col{ max-width:140px; }
+  .dresscode-col svg{ width:70px; height:auto; margin:0 auto 0.8rem; display:block; }
+  .dresscode-col .who{ font-family:'Cormorant Garamond', serif; font-size:1.3rem; margin-bottom:0.2rem; }
+  .dresscode-col .what{ font-size:0.72rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold-soft); }
+  .avoid-box{ max-width:420px; margin:0 auto; border-top:1px solid rgba(255,255,255,0.18); padding-top:1.8rem; }
+  .avoid-box .eyebrow{ margin-bottom:1rem; }
+  .avoid-row{ display:flex; justify-content:center; gap:1.6rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+  .avoid-item{ display:flex; flex-direction:column; align-items:center; gap:0.4rem; }
+  .avoid-swatch{ position:relative; width:36px; height:36px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.5); }
+  .avoid-swatch::after{
+    content:''; position:absolute; inset:-2px; border-radius:50%;
+    background:linear-gradient(to top right, transparent 47%, rgba(255,255,255,0.85) 49%, rgba(255,255,255,0.85) 51%, transparent 53%);
+  }
+  .avoid-item span{ font-size:0.66rem; letter-spacing:1px; text-transform:uppercase; color:var(--gold-soft); }
+
+  /* RSVP */
+  #rsvp{ background:var(--sage); color:var(--ivory); }
+  #rsvp h2{ font-size:clamp(1.8rem,5vw,2.4rem); margin-bottom:0.8rem; }
+  #rsvp p{ max-width:420px; margin:0 auto 1.8rem; opacity:0.95; }
+  .btn-solid{
+    display:inline-flex; align-items:center; gap:0.6rem;
+    background:var(--ivory); color:var(--wine-deep);
+    padding:0.95rem 2.2rem; border-radius:999px; font-size:1.02rem; letter-spacing:0.5px;
+    box-shadow:0 12px 24px rgba(0,0,0,0.18); transition:transform 0.25s ease;
+  }
+  .btn-solid:hover{ transform:translateY(-2px); }
+
+  /* PRESENTES */
+  #presentes{ background:var(--ivory); }
+  #presentes .subtitle{ color:#6b5f56; max-width:420px; margin:0 auto 2.4rem; }
+  .gift-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:1rem; max-width:640px; margin:0 auto; }
+  .gift{
+    border-radius:12px; overflow:hidden; text-align:left;
+    background:#fff; border:1px solid var(--gold-soft);
+    display:flex; flex-direction:column;
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .gift:hover{ transform:translateY(-3px); box-shadow:0 10px 22px rgba(92,31,46,0.14); }
+  .gift-photo{ aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; font-size:2.6rem; overflow:hidden; }
+  .gift-photo img{ width:100%; height:100%; object-fit:cover; }
+  .gift-body{ padding:0.8rem 0.9rem 1rem; display:flex; flex-direction:column; gap:0.3rem; flex:1; }
+  .gift-body h4{ font-family:'Cormorant Garamond', serif; font-size:1.15rem; color:var(--ink); }
+  .gift-body p{ font-size:0.76rem; color:#7a6f63; line-height:1.4; flex:1; }
+  .gift-price{ font-weight:600; color:var(--wine-deep); font-size:0.95rem; margin-top:0.2rem; }
+  .gift-btn{
+    margin-top:0.6rem; border:none; cursor:pointer; border-radius:999px;
+    background:var(--wine); color:var(--ivory); padding:0.55rem 0; font-size:0.78rem;
+    letter-spacing:0.5px; font-family:'Poppins', sans-serif;
+  }
+
+  /* MODAL PIX */
+  #pix-modal{ position:fixed; inset:0; background:rgba(43,35,32,0.55); display:none; align-items:center; justify-content:center; z-index:200; padding:1.2rem; }
+  #pix-modal.open{ display:flex; }
+  .pix-card{ background:var(--ivory); border-radius:12px; padding:2rem 1.6rem; max-width:340px; width:100%; text-align:center; position:relative; }
+  .pix-card h3{ font-size:1.4rem; margin-bottom:0.4rem; }
+  .pix-card p{ color:#6b5f56; font-size:0.92rem; margin-bottom:1.2rem; }
+  .pix-key-box{ background:#fff; border:1px dashed var(--gold); border-radius:8px; padding:0.7rem; font-size:0.85rem; word-break:break-all; margin-bottom:1rem; }
+  .close-modal{ position:absolute; top:0.7rem; right:0.9rem; font-size:1.3rem; cursor:pointer; color:#8a7a6d; }
+  .copy-feedback{ font-size:0.78rem; color:var(--sage); min-height:1.1rem; }
+
+  footer{
+    background:var(--cream); text-align:center; padding:4.5rem 1.5rem 3rem;
+  }
+  .footer-names{
+    font-size:clamp(2.4rem, 10vw, 3.6rem); font-weight:500; color:var(--wine-deep);
+  }
+  .footer-names .amp{ color:var(--gold); font-style:italic; }
+  .footer-meta{
+    margin-top:1rem; letter-spacing:1px; font-size:0.95rem; color:#7a6f63;
+  }
+  .footer-signoff{
+    margin-top:1.6rem; letter-spacing:4px; font-size:0.75rem; text-transform:uppercase; color:var(--gold);
+  }
+
+  /* BOTÃO DE MÚSICA */
+  .music-toggle{
+    position:fixed; right:1.1rem; bottom:1.4rem; z-index:150;
+    width:52px; height:52px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--wine-deep); color:var(--ivory);
+    display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+    box-shadow:0 10px 24px rgba(0,0,0,0.25);
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= CAPA / ENVELOPE ================= -->
+<div id="envelope-screen">
+  <div class="confetti" style="width:10px;height:10px;background:var(--gold);top:12%;left:18%;"></div>
+  <div class="confetti" style="width:14px;height:14px;background:var(--wine);top:18%;left:75%;"></div>
+  <div class="confetti" style="width:8px;height:8px;background:var(--orange);top:75%;left:82%;"></div>
+  <div class="confetti" style="width:12px;height:12px;background:var(--gold);top:80%;left:14%;"></div>
+  <div class="confetti" style="width:9px;height:9px;background:var(--orange);top:30%;left:88%;"></div>
+  <div class="confetti" style="width:7px;height:7px;background:var(--wine);top:65%;left:8%;"></div>
+
+  <div class="envelope" id="envelope">
+    <div class="cover-kicker">Casamento</div>
+    <h1 class="cover-names" id="cover-names">Z <span class="amp">&amp;</span> R</h1>
+    <div class="divider"></div>
+    <div class="cover-date" id="cover-date">22 de novembro de 2026</div>
+    <div class="seal" id="seal-btn" aria-label="Abrir convite">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-soft)" stroke-width="1.4">
+        <path d="M12 21s-7.5-4.6-10.1-9.1C.3 8.8 1.6 5 5.1 4.1 7.6 3.5 9.9 4.7 12 7.2c2.1-2.5 4.4-3.7 6.9-3.1 3.5.9 4.8 4.7 3.2 7.8C19.5 16.4 12 21 12 21z"/>
+      </svg>
+    </div>
+    <div class="envelope-caption">Toque para abrir</div>
+  </div>
+</div>
+
+<!-- ================= SITE ================= -->
+<div id="site">
+
+  <audio id="bg-music" loop></audio>
+  <button id="music-toggle" class="music-toggle" aria-label="Tocar ou pausar música">▶</button>
+
+  <section id="hero">
+    <div class="kicker">Convidam para celebrar</div>
+    <h1 class="names" id="hero-names">Zádia <span class="amp">&amp;</span> Roni</h1>
+    <div class="date-line" id="hero-date">22 de novembro de 2026 · 16h</div>
+    <div class="divider"></div>
+    <p class="invite-text" id="hero-frase">Com imensa alegria, convidamos você a celebrar a união das nossas vidas perante Deus e nossa família.</p>
+    <div class="hero-photo-wrap">
+      <img id="hero-foto" src="assets/casal.jpg" alt="Foto do casal">
+    </div>
+  </section>
+
+  <section id="verse">
+    <blockquote>
+      <span id="verse-texto">“Portanto o que Deus ajuntou não o separe o homem.”</span>
+      <cite id="verse-referencia">Marcos 10:9</cite>
+    </blockquote>
+  </section>
+
+  <section id="local">
+    <h2 class="display" style="font-size:2rem; margin-bottom:1.6rem;">O local</h2>
+    <div class="place-photo">
+      <img id="local-foto" src="assets/local.jpg" alt="Foto do local">
+    </div>
+    <address id="local-endereco">Garden Buffet<br>Av. Benjamin Brasil, 570 — Maraponga<br>Fortaleza — CE</address>
+    <a class="btn" id="local-mapa" href="#" target="_blank" rel="noopener">Ver no mapa</a>
+  </section>
+
+  <section id="countdown">
+    <div class="eyebrow">Faltam</div>
+    <h2 class="display">Contagem regressiva</h2>
+    <div class="countdown-grid">
+      <div class="countdown-item"><div class="countdown-num" id="cd-days">00</div><div class="countdown-label">Dias</div></div>
+      <div class="countdown-item"><div class="countdown-num" id="cd-hours">00</div><div class="countdown-label">Horas</div></div>
+      <div class="countdown-item"><div class="countdown-num" id="cd-mins">00</div><div class="countdown-label">Minutos</div></div>
+      <div class="countdown-item"><div class="countdown-num" id="cd-secs">00</div><div class="countdown-label">Segundos</div></div>
+    </div>
+  </section>
+
+  <section id="dresscode">
+    <div class="eyebrow">Traje</div>
+    <h2 class="display">Dress Code</h2>
+    <p class="intro" id="dresscode-intro"></p>
+    <div class="dresscode-cols">
+      <div class="dresscode-col">
+        <svg viewBox="0 0 100 160" fill="none" stroke="var(--gold-soft)" stroke-width="1.6">
+          <circle cx="50" cy="18" r="14"/>
+          <path d="M28 42 L36 34 L50 42 L64 34 L72 42 L72 100 L28 100 Z"/>
+          <path d="M50 42 L46 52 L50 60 L54 52 Z"/>
+          <line x1="28" y1="100" x2="24" y2="150"/>
+          <line x1="72" y1="100" x2="76" y2="150"/>
+        </svg>
+        <div class="who">Ele</div>
+        <div class="what">Terno ou blazer</div>
+      </div>
+      <div class="dresscode-col">
+        <svg viewBox="0 0 100 160" fill="none" stroke="var(--gold-soft)" stroke-width="1.6">
+          <circle cx="50" cy="18" r="14"/>
+          <path d="M34 40 L50 50 L66 40 L74 58 L58 66 L64 150 L36 150 L42 66 L26 58 Z"/>
+        </svg>
+        <div class="who">Ela</div>
+        <div class="what">Vestido longo ou midi</div>
+      </div>
+    </div>
+    <div class="avoid-box">
+      <div class="eyebrow">Pedimos para evitar</div>
+      <div class="avoid-row" id="avoid-ele"></div>
+      <div class="avoid-row" id="avoid-ela"></div>
+    </div>
+  </section>
+
+  <section id="rsvp">
+    <h2 class="display">Confirme sua presença</h2>
+    <p>Sua presença é o maior presente. Toque no botão abaixo para confirmar pelo WhatsApp.</p>
+    <a class="btn-solid" id="rsvp-link" href="#" target="_blank" rel="noopener">Confirmar via WhatsApp</a>
+  </section>
+
+  <section id="presentes">
+    <h2 class="display" style="font-size:2rem;">Nossos Desejos</h2>
+    <div class="divider"></div>
+    <p class="subtitle">Sua presença já é o maior presente. Mas se quiser nos mimar, escolha um presente abaixo.</p>
+    <div class="gift-grid" id="gift-grid"></div>
+  </section>
+
+  <footer>
+    <h2 class="footer-names" id="footer-names">Z <span class="amp">&amp;</span> R</h2>
+    <div class="divider"></div>
+    <div class="footer-meta" id="footer-meta">22 · 11 · 2026 · Fortaleza, Ceará</div>
+    <div class="footer-signoff">Com amor</div>
+  </footer>
+</div>
+
+<!-- ================= MODAL PIX ================= -->
+<div id="pix-modal">
+  <div class="pix-card">
+    <span class="close-modal" id="close-modal">&times;</span>
+    <h3 id="pix-title">Presente</h3>
+    <p id="pix-desc">Chave Pix para contribuição:</p>
+    <div class="pix-key-box" id="pix-key"></div>
+    <button class="btn" id="copy-btn" style="cursor:pointer; background:none;">Copiar chave Pix</button>
+    <div class="copy-feedback" id="copy-feedback"></div>
+  </div>
+</div>
+
+<!-- dados.js precisa vir ANTES deste script -->
+<script src="dados.js"></script>
+<script>
+  // Plano B: se por algum motivo dados.js não for encontrado
+  // (ex: pré-visualização isolada), usa este objeto padrão.
+  if (typeof dados === 'undefined') {
+    var dados = {
+      noivos: { curto1: "Z", curto2: "R", completo1: "Zádia", completo2: "Roni" },
+      data: { textoCapa: "22 de novembro de 2026", textoComHora: "22 de novembro de 2026 · 16h", textoCurto: "22 · 11 · 2026", isoCasamento: "2026-11-22T16:00:00-03:00" },
+      versiculo: { texto: "“Portanto o que Deus ajuntou não o separe o homem.”", referencia: "Marcos 10:9" },
+      fraseConvite: "Com imensa alegria, convidamos você a celebrar a união das nossas vidas perante Deus e nossa família.",
+      fotoCasal: "assets/casal.jpg",
+      local: { nome: "Garden Buffet", enderecoHTML: "Av. Benjamin Brasil, 570 — Maraponga<br>Fortaleza — CE", mapaQuery: "Garden Buffet Av. Benjamin Brasil 570 Maraponga Fortaleza", cidadeCurta: "Fortaleza, Ceará", foto: "assets/local.jpg" },
+      whatsapp: { numero: "5585986513393", mensagem: "Oi! Quero confirmar minha presença no casamento de Zádia e Roni ♥" },
+      pixChavePadrao: "08869619397",
+      musica: "assets/musica.mp3",
+      trajes: {
+        intro: "Social fino · Vista-se com elegância para celebrar este momento especial",
+        evitarEle: [ { cor:"#8c8c8c", label:"Cinza" }, { cor:"#c9c9c9", label:"Cinza claro" } ],
+        evitarEla: [ { cor:"#C2185B", label:"Fúcsia" }, { cor:"#E8793C", label:"Laranja" }, { cor:"#8fd0c4", label:"Verde-água" }, { cor:"#f4f4f4", label:"Branco" } ]
+      },
+      presentes: [
+        { nome:"Lua de Mel", foto:"", emoji:"✈️", cor:"#F3E3D3", desc:"Para a gente sumir no primeiro capítulo do casamento.", preco:"R$ 500,00", chave:"08869619397" },
+        { nome:"Terapia do Casal", foto:"", emoji:"🛋️", cor:"#E7D9E4", desc:"Ajuda para pagar a terapia depois de organizar o casamento.", preco:"R$ 250,00", chave:"08869619397" },
+        { nome:"Cueca de Núpcias", foto:"", emoji:"🩲", cor:"#DCE7E3", desc:"Cueca nova pro noivo estrear na noite de núpcias.", preco:"R$ 160,00", chave:"08869619397" },
+        { nome:"Corte Craque", foto:"", emoji:"✂️", cor:"#F0E6D2", desc:"Um ano de corte de cabelo garantido pro noivo.", preco:"R$ 300,00", chave:"08869619397" },
+        { nome:"Curso Culinário", foto:"", emoji:"🍳", cor:"#EFE0DD", desc:"Pra ele aprender a cozinhar pra ela (ou o contrário).", preco:"R$ 100,00", chave:"08869619397" },
+        { nome:"Vaquinha da Reforma", foto:"", emoji:"🐄", cor:"#E3E9DC", desc:"Vaquinha coletiva pra reformar a casa nova.", preco:"R$ 480,00", chave:"08869619397" },
+        { nome:"Cobertor da Razão", foto:"", emoji:"🛏️", cor:"#DDE2EC", desc:"Pra noiva que sempre está coberta de razão.", preco:"R$ 80,00", chave:"08869619397" },
+        { nome:"Mira no Buquê", foto:"", emoji:"💐", cor:"#F1E8DB", desc:"Ajude a testar a pontaria da noiva na hora do buquê.", preco:"R$ 180,00", chave:"08869619397" },
+        { nome:"Cota do Bebê", foto:"", emoji:"👶", cor:"#EAE0E8", desc:"Contribua pra reserva do primeiro herdeiro do casal.", preco:"R$ 500,00", chave:"08869619397" }
+      ]
+    };
+  }
+</script>
+<script>
+  // ===== Preenche o site com o conteúdo de dados.js =====
+  document.getElementById('page-title').textContent =
+    `${dados.noivos.completo1} & ${dados.noivos.completo2} | ${dados.data.textoCapa}`;
+
+  document.getElementById('cover-names').innerHTML =
+    `${dados.noivos.curto1} <span class="amp">&amp;</span> ${dados.noivos.curto2}`;
+  document.getElementById('cover-date').textContent = dados.data.textoCapa;
+
+  document.getElementById('hero-names').innerHTML =
+    `${dados.noivos.completo1} <span class="amp">&amp;</span> ${dados.noivos.completo2}`;
+  document.getElementById('hero-date').textContent = dados.data.textoComHora;
+  document.getElementById('hero-frase').textContent = dados.fraseConvite;
+  document.getElementById('hero-foto').src = dados.fotoCasal;
+
+  document.getElementById('verse-texto').textContent = dados.versiculo.texto;
+  document.getElementById('verse-referencia').textContent = dados.versiculo.referencia;
+
+  document.getElementById('local-foto').src = dados.local.foto;
+  document.getElementById('local-endereco').innerHTML = `${dados.local.nome}<br>${dados.local.enderecoHTML}`;
+  document.getElementById('local-mapa').href =
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dados.local.mapaQuery)}`;
+
+  document.getElementById('dresscode-intro').textContent = dados.trajes.intro;
+  function renderAvoid(containerId, lista, quem){
+    const el = document.getElementById(containerId);
+    lista.forEach(item=>{
+      const div = document.createElement('div');
+      div.className = 'avoid-item';
+      div.innerHTML = `<div class="avoid-swatch" style="background:${item.cor};"></div><span>${item.label} (${quem})</span>`;
+      el.appendChild(div);
+    });
+  }
+  renderAvoid('avoid-ele', dados.trajes.evitarEle, 'Ele');
+  renderAvoid('avoid-ela', dados.trajes.evitarEla, 'Ela');
+
+  const msg = encodeURIComponent(dados.whatsapp.mensagem);
+  document.getElementById('rsvp-link').href = `https://wa.me/${dados.whatsapp.numero}?text=${msg}`;
+
+  document.getElementById('footer-names').innerHTML =
+    `${dados.noivos.curto1} <span class="amp">&amp;</span> ${dados.noivos.curto2}`;
+  document.getElementById('footer-meta').textContent =
+    `${dados.data.textoCurto} · ${dados.local.cidadeCurta}`;
+
+  document.getElementById('bg-music').src = dados.musica;
+
+  // ===== Presentes =====
+  const grid = document.getElementById('gift-grid');
+  dados.presentes.forEach(p=>{
+    const div = document.createElement('div');
+    div.className = 'gift';
+    const fotoHTML = p.foto
+      ? `<div class="gift-photo"><img src="${p.foto}" alt="${p.nome}"></div>`
+      : `<div class="gift-photo" style="background:${p.cor};">${p.emoji}</div>`;
+    div.innerHTML = `
+      ${fotoHTML}
+      <div class="gift-body">
+        <h4>${p.nome}</h4>
+        <p>${p.desc}</p>
+        <div class="gift-price">${p.preco}</div>
+        <button class="gift-btn">Ver chave Pix</button>
+      </div>`;
+    div.querySelector('.gift-btn').addEventListener('click', ()=> openPix(p));
+    grid.appendChild(div);
+  });
+
+  function openPix(p){
+    document.getElementById('pix-title').textContent = p.nome;
+    document.getElementById('pix-key').textContent = p.chave;
+    document.getElementById('copy-feedback').textContent = '';
+    document.getElementById('pix-modal').classList.add('open');
+  }
+  document.getElementById('close-modal').addEventListener('click', ()=>{
+    document.getElementById('pix-modal').classList.remove('open');
+  });
+  document.getElementById('pix-modal').addEventListener('click', (e)=>{
+    if(e.target.id === 'pix-modal') e.target.classList.remove('open');
+  });
+  document.getElementById('copy-btn').addEventListener('click', ()=>{
+    const key = document.getElementById('pix-key').textContent;
+    navigator.clipboard.writeText(key).then(()=>{
+      document.getElementById('copy-feedback').textContent = 'Chave copiada! Cole no seu app do banco.';
+    }).catch(()=>{
+      document.getElementById('copy-feedback').textContent = 'Não foi possível copiar automaticamente — copie manualmente.';
+    });
+  });
+
+  // ===== Contagem regressiva =====
+  const weddingDate = new Date(dados.data.isoCasamento).getTime();
+  function updateCountdown(){
+    const now = new Date().getTime();
+    const diff = Math.max(0, weddingDate - now);
+    document.getElementById('cd-days').textContent = String(Math.floor(diff/(1000*60*60*24))).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(Math.floor((diff%(1000*60*60*24))/(1000*60*60))).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(Math.floor((diff%(1000*60*60))/(1000*60))).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(Math.floor((diff%(1000*60))/1000)).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ===== Música (arquivo mp3 real — muito mais confiável que embed do YouTube) =====
+  const music = document.getElementById('bg-music');
+  const musicBtn = document.getElementById('music-toggle');
+  function tocarMusica(){
+    music.play().then(()=>{ musicBtn.textContent = '⏸'; }).catch(()=>{ /* navegador bloqueou; pessoa pode tocar no botão */ });
+  }
+  musicBtn.addEventListener('click', ()=>{
+    if(music.paused){ music.play(); musicBtn.textContent = '⏸'; }
+    else{ music.pause(); musicBtn.textContent = '▶'; }
+  });
+
+  // ===== Abrir envelope =====
+  const envelope = document.getElementById('envelope');
+  const envelopeScreen = document.getElementById('envelope-screen');
+  const site = document.getElementById('site');
+  document.getElementById('seal-btn').addEventListener('click', ()=>{
+    envelope.classList.add('opening');
+    tocarMusica();
+    setTimeout(()=>{
+      envelopeScreen.classList.add('hidden');
+      site.classList.add('visible');
+    }, 500);
+  });
+</script>
+
+</body>
+</html>
