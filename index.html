@@ -43,7 +43,11 @@
     overflow:hidden;
   }
   #envelope-screen.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
-  .confetti{ position:absolute; border-radius:50%; opacity:0.7; }
+  .confetti{ position:absolute; border-radius:50%; opacity:0.7; animation:flutuar 5s ease-in-out infinite; }
+  @keyframes flutuar{
+    0%, 100%{ transform:translate(0,0); }
+    50%{ transform:translate(6px,-16px); }
+  }
   .envelope{
     position:relative; width:min(82vw, 340px);
     display:flex; flex-direction:column; align-items:center; text-align:center;
@@ -170,6 +174,22 @@
     letter-spacing:0.5px; font-family:'Poppins', sans-serif;
   }
 
+  /* PIX AVULSO */
+  .pix-avulso{
+    max-width:420px; margin:2.6rem auto 0; padding-top:2rem;
+    border-top:1px solid var(--gold-soft);
+  }
+  .pix-avulso p{
+    font-family:'Cormorant Garamond', serif; font-style:italic;
+    color:var(--wine-deep); font-size:1.15rem; line-height:1.5; margin-bottom:1.2rem;
+  }
+  .pix-avulso .pix-key-box{
+    max-width:320px; margin:0 auto 1rem;
+    font-family:'Cormorant Garamond', serif; font-size:1.15rem; letter-spacing:1px;
+    color:var(--wine-deep); font-weight:600; background:var(--cream);
+    border:1px solid var(--gold); padding:0.9rem;
+  }
+
   /* MODAL PIX */
   #pix-modal{ position:fixed; inset:0; background:rgba(43,35,32,0.55); display:none; align-items:center; justify-content:center; z-index:200; padding:1.2rem; }
   #pix-modal.open{ display:flex; }
@@ -208,12 +228,12 @@
 
 <!-- ================= CAPA / ENVELOPE ================= -->
 <div id="envelope-screen">
-  <div class="confetti" style="width:10px;height:10px;background:var(--gold);top:12%;left:18%;"></div>
-  <div class="confetti" style="width:14px;height:14px;background:var(--wine);top:18%;left:75%;"></div>
-  <div class="confetti" style="width:8px;height:8px;background:var(--orange);top:75%;left:82%;"></div>
-  <div class="confetti" style="width:12px;height:12px;background:var(--gold);top:80%;left:14%;"></div>
-  <div class="confetti" style="width:9px;height:9px;background:var(--orange);top:30%;left:88%;"></div>
-  <div class="confetti" style="width:7px;height:7px;background:var(--wine);top:65%;left:8%;"></div>
+  <div class="confetti" style="width:10px;height:10px;background:var(--gold);top:12%;left:18%;animation-delay:0s;"></div>
+  <div class="confetti" style="width:14px;height:14px;background:var(--wine);top:18%;left:75%;animation-delay:0.8s;"></div>
+  <div class="confetti" style="width:8px;height:8px;background:var(--orange);top:75%;left:82%;animation-delay:1.6s;"></div>
+  <div class="confetti" style="width:12px;height:12px;background:var(--gold);top:80%;left:14%;animation-delay:2.4s;"></div>
+  <div class="confetti" style="width:9px;height:9px;background:var(--orange);top:30%;left:88%;animation-delay:3.2s;"></div>
+  <div class="confetti" style="width:7px;height:7px;background:var(--wine);top:65%;left:8%;animation-delay:4s;"></div>
 
   <div class="envelope" id="envelope">
     <div class="cover-kicker">Casamento</div>
@@ -316,6 +336,13 @@
     <div class="divider"></div>
     <p class="subtitle">Sua presença já é o maior presente. Mas se quiser nos mimar, escolha um presente abaixo.</p>
     <div class="gift-grid" id="gift-grid"></div>
+
+    <div class="pix-avulso">
+      <p id="pix-avulso-texto"></p>
+      <div class="pix-key-box" id="pix-avulso-chave"></div>
+      <button class="btn" id="pix-avulso-copy" style="cursor:pointer; background:none;">Copiar chave Pix</button>
+      <div class="copy-feedback" id="pix-avulso-feedback"></div>
+    </div>
   </section>
 
   <footer>
@@ -353,6 +380,7 @@
       local: { nome: "Garden Buffet", enderecoHTML: "Av. Benjamin Brasil, 570 — Maraponga<br>Fortaleza — CE", mapaQuery: "Garden Buffet Av. Benjamin Brasil 570 Maraponga Fortaleza", cidadeCurta: "Fortaleza, Ceará", foto: "assets/local.jpg" },
       whatsapp: { numero: "5585986513393", mensagem: "Oi! Quero confirmar minha presença no casamento de Zádia e Roni ♥" },
       pixChavePadrao: "08869619397",
+      pixAvulso: { texto: "Quer mandar um valor diferente das sugestões? Aqui está nosso Pix:", chave: "08869619397" },
       musica: "assets/musica.mp3",
       trajes: {
         intro: "Social fino · Vista-se com elegância para celebrar este momento especial",
@@ -457,6 +485,17 @@
       document.getElementById('copy-feedback').textContent = 'Chave copiada! Cole no seu app do banco.';
     }).catch(()=>{
       document.getElementById('copy-feedback').textContent = 'Não foi possível copiar automaticamente — copie manualmente.';
+    });
+  });
+
+  // ===== Pix avulso =====
+  document.getElementById('pix-avulso-texto').textContent = dados.pixAvulso.texto;
+  document.getElementById('pix-avulso-chave').textContent = dados.pixAvulso.chave;
+  document.getElementById('pix-avulso-copy').addEventListener('click', ()=>{
+    navigator.clipboard.writeText(dados.pixAvulso.chave).then(()=>{
+      document.getElementById('pix-avulso-feedback').textContent = 'Chave copiada! Cole no seu app do banco.';
+    }).catch(()=>{
+      document.getElementById('pix-avulso-feedback').textContent = 'Não foi possível copiar automaticamente — copie manualmente.';
     });
   });
 
