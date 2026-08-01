@@ -82,11 +82,11 @@ const dados = {
   presentes: [
     { nome:"Lua de Mel", foto:"assets/presentes/lua-de-mel.jpg", emoji:"✈️", cor:"#F3E3D3", desc:"Para a gente sumir no primeiro capítulo do casamento.", preco:"R$ 500,00", chave:"08869619397" },
     { nome:"Terapia do Casal", foto:"assets/presentes/terapia.jpg", emoji:"🛋️", cor:"#E7D9E4", desc:"Ajuda para pagar a terapia depois de organizar o casamento.", preco:"R$ 250,00", chave:"08869619397" },
-    { nome:"Cueca de Núpcias", foto:"", emoji:"🩲", cor:"#DCE7E3", desc:"Cueca nova pro noivo estrear na noite de núpcias.", preco:"R$ 160,00", chave:"08869619397" },
+    { nome:"Cueca de Núpcias", foto:"assets/presentes/cueca.jpg", emoji:"🩲", cor:"#DCE7E3", desc:"Cueca nova pro noivo estrear na noite de núpcias.", preco:"R$ 160,00", chave:"08869619397" },
     { nome:"Corte Craque", foto:"assets/presentes/corte-craque.jpg", emoji:"✂️", cor:"#F0E6D2", desc:"Um ano de corte de cabelo garantido pro noivo.", preco:"R$ 300,00", chave:"08869619397" },
-    { nome:"Curso Culinário", foto:"", emoji:"🍳", cor:"#EFE0DD", desc:"Pra ele aprender a cozinhar pra ela (ou o contrário).", preco:"R$ 100,00", chave:"08869619397" },
+    { nome:"Curso Culinário", foto:"assets/presentes/culinario.jpg", emoji:"🍳", cor:"#EFE0DD", desc:"Pra ele aprender a cozinhar pra ela (ou o contrário).", preco:"R$ 100,00", chave:"08869619397" },
     { nome:"Vaquinha da Reforma", foto:"assets/presentes/vaquinha.jpg", emoji:"🐄", cor:"#E3E9DC", desc:"Vaquinha coletiva pra reformar a casa nova.", preco:"R$ 480,00", chave:"08869619397" },
-    { nome:"Cobertor da Razão", foto:"", emoji:"🛏️", cor:"#DDE2EC", desc:"Pra noiva que sempre está coberta de razão.", preco:"R$ 80,00", chave:"08869619397" },
+    { nome:"Cobertor da Razão", foto:"assets/presentes/cobertor.jpg", emoji:"🛏️", cor:"#DDE2EC", desc:"Pra noiva que sempre está coberta de razão.", preco:"R$ 80,00", chave:"08869619397" },
     { nome:"Mira no Buquê", foto:"assets/presentes/mira-no-buque.jpg", emoji:"💐", cor:"#F1E8DB", desc:"Ajude a testar a pontaria da noiva na hora do buquê.", preco:"R$ 180,00", chave:"08869619397" },
     { nome:"Cota do Bebê", foto:"assets/presentes/cota-bebe.jpg", emoji:"👶", cor:"#EAE0E8", desc:"Contribua pra reserva do primeiro herdeiro do casal.", preco:"R$ 500,00", chave:"08869619397" }
   ]
